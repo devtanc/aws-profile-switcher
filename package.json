@@ -1,6 +1,6 @@
 {
-  "name": "@devtanc/aws-profile-switcher",
-  "version": "0.0.3",
+  "name": "aws-profile-switcher",
+  "version": "0.0.4",
   "description": "A basic cli for switching your default aws profile in ~/.aws/credentials",
   "main": "switcher.js",
   "scripts": {
@@ -18,6 +18,6 @@
     "prompt": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^3.19.0"
   }
 }

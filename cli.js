@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const fs = require('fs');
 const switcher = require('./switcher');
 
-const data = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, './package.json'), 'utf8'));
 
 commander
 .usage('<command> [options]')
