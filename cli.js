@@ -1,9 +1,10 @@
 #!/usr/bin/env node --harmony
 const commander = require('commander');
-const prompt = require('prompt');
-const chalk = require('chalk');
-const fs = require('fs');
-const switcher = require('./switcher');
+const prompt    = require('prompt');
+const chalk     = require('chalk');
+const fs        = require('fs');
+const path      = require('path');
+const switcher  = require('./switcher');
 
 const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, './package.json'), 'utf8'));
 
