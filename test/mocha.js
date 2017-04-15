@@ -1,0 +1,1 @@
+const switcher = require('../switcher');
