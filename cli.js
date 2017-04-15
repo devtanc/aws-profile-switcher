@@ -50,17 +50,19 @@ commander.command('switch')
     .catch(err => console.error);
   }
   else {
-    switcher.listProfiles();
-    prompt.start();
-    prompt.get([ 'index' ], (err, result) => {
-      if (err) {
-        throw err;
-      }
-      switcher.getProfileNameByIndex(result.index).then(name => {
-        console.log(chalk.green(`Switching default aws profile to ${ name }`));
-        return switcher.switchProfileByName(name);
-      })
-      .catch(err => console.error);
+    switcher.listProfiles()
+    .then(() => {
+      prompt.start();
+      prompt.get([ 'index' ], (err, result) => {
+        if (err) {
+          throw err;
+        }
+        switcher.getProfileNameByIndex(result.index).then(name => {
+          console.log(chalk.green(`Switching default aws profile to ${ name }`));
+          return switcher.switchProfileByName(name);
+        })
+        .catch(err => console.error);
+      });
     });
   }
 });

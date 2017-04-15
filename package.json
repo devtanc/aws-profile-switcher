@@ -1,6 +1,6 @@
 {
   "name": "aws-profile-switcher",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A basic cli for switching your default aws profile in ~/.aws/credentials",
   "main": "switcher.js",
   "scripts": {
