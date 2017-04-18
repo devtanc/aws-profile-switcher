@@ -1,10 +1,10 @@
 {
   "name": "aws-profile-switcher",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A basic cli for switching your default aws profile in ~/.aws/credentials",
   "main": "switcher.js",
   "scripts": {
-    "test": "mocha"
+    "test": "SWITCHER_ENV=test mocha"
   },
   "keywords": [],
   "author": "devtanc",
@@ -22,6 +22,9 @@
     "prompt": "^1.0.0"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "chai-spies": "^0.7.1",
     "eslint": "^3.19.0"
   }
 }
