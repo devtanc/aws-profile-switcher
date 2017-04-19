@@ -7,11 +7,13 @@
 [![GitHub issues](https://img.shields.io/github/issues/devtanc/aws-profile-switcher.svg)](https://github.com/devtanc/aws-profile-switcher/issues)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
-A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`
+-
+
+A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`.
 
 Let me know via GitHub if you notice any issues on a given OS. I'm open to any suggestions.
 
-Install: `npm install -g aws-profile-switcher`
+**Install:** `npm install -g aws-profile-switcher`
 
 ```
 Usage: switcher <command> [options]
@@ -34,11 +36,11 @@ Usage: switcher <command> [options]
     -i, --index    <optional>  The index of the profile to make the default profile (from list command)
 ```
 
-*The alias for 'current' was 'curr' previous to v1.0.0
+_*The alias for the 'current' command was 'curr' previous to v1.0.0_
 
-
-
-Examples given the following `~/.aws/credentials` file:
+Examples
+-
+Given the following `~/.aws/credentials` file. (This is not a sequence of commands. Assume each is done in a separate environment on the file below)
 
 ```
 [default]
@@ -57,8 +59,6 @@ aws_secret_access_key = PROFILE_2_SECRET
 aws_access_key_id = PROFILE_3_ID
 aws_secret_access_key = PROFILE_3_SECRET
 ```
-
-(This is not a sequence of commands. Assume each is done ina separate environment on the above file.)
 
 ```
 Command: switcher ls
@@ -128,3 +128,16 @@ Changes to file:
 	+ aws_access_key_id = PROFILE_3_ID
 	+ aws_secret_access_key = PROFILE_3_SECRET
 ```
+
+-
+
+**DISCLAIMER:** Yes, I'm aware of the [built-in](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#using-profiles) profile functionality that AWS CLI has. This little tool was written for many reasons:
+
+- Some AWS CLI wrappers don't have `--profile` as an option, so the `export/set` command is the only option
+- `switcher sw` is less characters and easier to remember than `exports/set AWS_DEFAULT_PROFILE=profile1` (although a bash alias/function could shorten the # of characters)
+- *BUT* `switcher sw` lists out the profiles so that you don't have to remember the names
+- *AND* more people know how to install an npm package than how to update their `~/.bash_profile` file correctly, most likely
+- Changing a profile applies to all shell instances for as long as it is set
+- I got to try out writing a cli package with full unit tests, a linter, and build integration with TravisCI
+
+In the end, if you like it: install it and use it. I certainly like it better than the alternatives.
