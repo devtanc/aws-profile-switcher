@@ -7,17 +7,24 @@
     "test": "xo && mocha"
   },
   "xo": {
-    "space": true,
+    "space": true, // Spaces NOT tabs...duh
     "globals": [
+      // Mocha globals
       "describe",
       "it"
     ],
     "rules": {
-      "camelcase": [ "off" ],
-      "comma-dangle": [ "error", "always-multiline" ]
+      "camelcase": [ "off" ], // Due to the aws credential file format
+      "comma-dangle": [ "error", "always-multiline" ] // Because I like it this way
     }
   },
-  "keywords": [],
+  "keywords": [
+    "aws",
+    "cli",
+    "credentials",
+    "profiles",
+    "switching"
+  ],
   "author": "devtanc",
   "license": "MIT",
   "bin": {
