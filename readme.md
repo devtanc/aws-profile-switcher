@@ -7,8 +7,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/devtanc/aws-profile-switcher.svg)](https://github.com/devtanc/aws-profile-switcher/issues)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
--
-
 A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`.
 
 Let me know via GitHub if you notice any issues on a given OS. I'm open to any suggestions.
@@ -38,8 +36,8 @@ Usage: switcher <command> [options]
 
 _*The alias for the 'current' command was 'curr' previous to v1.0.0_
 
-Examples
--
+# Examples
+
 Given the following `~/.aws/credentials` file. (This is not a sequence of commands. Assume each is done in a separate environment on the file below)
 
 ```
@@ -129,9 +127,9 @@ Changes to file:
 	+ aws_secret_access_key = PROFILE_3_SECRET
 ```
 
--
+# DISCLAIMER:
 
-**DISCLAIMER:** Yes, I'm aware of the [built-in](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#using-profiles) profile functionality that AWS CLI has. This little tool was written for many reasons:
+Yes, I'm aware of the [built-in](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#using-profiles) profile functionality that AWS CLI has. This little tool was written for many reasons:
 
 - Some AWS CLI wrappers don't have `--profile` as an option, so the `export/set` command is the only option
 - `switcher sw` is less characters and easier to remember than `exports/set AWS_DEFAULT_PROFILE=profile1` (although a bash alias/function could shorten the # of characters)
