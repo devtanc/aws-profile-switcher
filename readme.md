@@ -15,7 +15,7 @@ Usage: switcher <command> [options]
   Commands:
 
     list|ls               Lists available AWS profiles from [~/.aws/credentials]
-    current|curr          List the current default profile
+    current|c          List the current default profile
     switch|sw [options]   Switches the default profile to a different, user-specified profile
 
   Global Options:
