@@ -7,15 +7,14 @@
     "test": "xo && mocha"
   },
   "xo": {
-    "space": true, // Spaces NOT tabs...duh
+    "space": true,
     "globals": [
-      // Mocha globals
       "describe",
       "it"
     ],
     "rules": {
-      "camelcase": [ "off" ], // Due to the aws credential file format
-      "comma-dangle": [ "error", "always-multiline" ] // Because I like it this way
+      "camelcase": [ "off" ],
+      "comma-dangle": [ "error", "always-multiline" ]
     }
   },
   "keywords": [
