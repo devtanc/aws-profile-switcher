@@ -1,4 +1,6 @@
-#AWS Profile Switcher
+# AWS Profile Switcher
+
+[![Build Status](https://travis-ci.org/devtanc/aws-profile-switcher.svg?branch=master)](https://travis-ci.org/devtanc/aws-profile-switcher)
 
 A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`
 
