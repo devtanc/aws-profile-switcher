@@ -15,7 +15,7 @@ Usage: switcher <command> [options]
   Commands:
 
     list|ls               Lists available AWS profiles from [~/.aws/credentials]
-    current|c          List the current default profile
+    current|c             List the current default profile
     switch|sw [options]   Switches the default profile to a different, user-specified profile
 
   Global Options:
@@ -28,6 +28,10 @@ Usage: switcher <command> [options]
     -p, --profile  <optional>  The name of the profile to make the default profile
     -i, --index    <optional>  The index of the profile to make the default profile (from list command)
 ```
+
+*The alias for 'current' was 'curr' previous to v1.0.0
+
+
 
 Examples given the following `~/.aws/credentials` file:
 
