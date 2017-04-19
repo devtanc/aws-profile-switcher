@@ -2,6 +2,8 @@
 
 A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`
 
+Let me know via GitHub if you notice any issues on a given OS. I'm open to any suggestions.
+
 Install: `npm install -g aws-profile-switcher`
 
 ```
@@ -45,7 +47,7 @@ aws_access_key_id = PROFILE_3_ID
 aws_secret_access_key = PROFILE_3_SECRET
 ```
 
-(This is not a sequence of commands. Assume each is done separately on the above file.)
+(This is not a sequence of commands. Assume each is done ina separate environment on the above file.)
 
 ```
 Command: switcher ls

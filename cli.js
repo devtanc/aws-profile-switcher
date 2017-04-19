@@ -4,7 +4,7 @@ const prompt    = require('prompt');
 const chalk     = require('chalk');
 const fs        = require('fs');
 const path      = require('path');
-const switcher  = require('./switcher');
+const Switcher  = require('./switcher.js')();
 
 const data = JSON.parse(fs.readFileSync(path.resolve(__dirname, './package.json'), 'utf8'));
 
@@ -17,7 +17,7 @@ commander.command('list')
 .description('Lists available AWS profiles from [~/.aws/credentials]')
 .action(() => {
   console.log(chalk.green('Available profiles:'));
-  switcher.listProfiles()
+  Switcher.listProfiles()
   .catch(err => console.error);
 });
 
@@ -25,7 +25,7 @@ commander.command('current')
 .alias('curr')
 .description('List the current default profile')
 .action(() => {
-  switcher.getCurrentProfile().then(name => {
+  Switcher.getCurrentProfile().then(name => {
     return console.log(chalk.green(`Current profile: ${ name }`));
   })
   .catch(err => console.error);
@@ -40,26 +40,26 @@ commander.command('switch')
 .action(cmd => {
   if (cmd.profile) {
     console.log(chalk.green(`Switching default aws profile to ${ cmd.profile }`));
-    switcher.switchProfileByName(cmd.profile);
+    Switcher.switchProfileByName(cmd.profile);
   }
   else if (cmd.index) {
-    switcher.getProfileNameByIndex(cmd.index).then(name => {
+    Switcher.getProfileNameByIndex(cmd.index).then(name => {
       console.log(chalk.green(`Switching default aws profile to ${ name }`));
-      return switcher.switchProfileByName(name);
+      return Switcher.switchProfileByName(name);
     })
     .catch(err => console.error);
   }
   else {
-    switcher.listProfiles()
+    Switcher.listProfiles()
     .then(() => {
       prompt.start();
       prompt.get([ 'index' ], (err, result) => {
         if (err) {
           throw err;
         }
-        switcher.getProfileNameByIndex(result.index).then(name => {
+        Switcher.getProfileNameByIndex(result.index).then(name => {
           console.log(chalk.green(`Switching default aws profile to ${ name }`));
-          return switcher.switchProfileByName(name);
+          return Switcher.switchProfileByName(name);
         })
         .catch(err => console.error);
       });
