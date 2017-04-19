@@ -1,5 +1,6 @@
 # AWS Profile Switcher
 
+[![npm](https://img.shields.io/npm/v/aws-profile-switcher.svg)](https://www.npmjs.com/package/aws-profile-switcher)
 [![Build Status](https://travis-ci.org/devtanc/aws-profile-switcher.svg?branch=master)](https://travis-ci.org/devtanc/aws-profile-switcher)
 [![NPM Downloads](https://img.shields.io/npm/dt/aws-profile-switcher.svg)](https://www.npmjs.com/package/aws-profile-switcher)
 [![Dependency Status](https://gemnasium.com/badges/github.com/devtanc/aws-profile-switcher.svg)](https://gemnasium.com/github.com/devtanc/aws-profile-switcher)
