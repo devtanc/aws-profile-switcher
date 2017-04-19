@@ -1,6 +1,6 @@
 const fs        = require('fs');
 const path      = require('path');
-const Switcher  = require('../switcher.js')(path.resolve(__dirname, './.aws'));
+const Switcher  = require('../switcher.js')(path.resolve(__dirname, './aws'));
 const chai      = require('chai');
 chai.use(require("chai-as-promised"));
 const expect = chai.expect;
@@ -95,7 +95,7 @@ describe('Switcher test suite', () => {
     return Switcher.switchProfileByName('profile1')
     .then(() => {
       return new Promise((resolve, reject) => {
-        fs.readFile(path.resolve(__dirname, './.aws/credentials'), 'utf8', (err, data) => {
+        fs.readFile(path.resolve(__dirname, './aws/credentials'), 'utf8', (err, data) => {
           resolve(expect(data).to.equal(MODIFIED_LIST));
         });
       })
@@ -103,7 +103,7 @@ describe('Switcher test suite', () => {
     .then(() => Switcher.switchProfileByName('profile2'))
     .then(() => {
       return new Promise((resolve, reject) => {
-        fs.readFile(path.resolve(__dirname, './.aws/credentials'), 'utf8', (err, data) => {
+        fs.readFile(path.resolve(__dirname, './aws/credentials'), 'utf8', (err, data) => {
           resolve(expect(data).to.equal(ORIGINAL_LIST));
         });
       });
@@ -111,7 +111,7 @@ describe('Switcher test suite', () => {
   });
 
   it('Should throw error when trying to read a folder with no credentials', () => {
-    const directory = path.resolve(__dirname, './.aws_no_credentials')
+    const directory = path.resolve(__dirname, './aws_no_credentials')
     function createNewSwitcherWithBadDir() {
       return require('../switcher.js')(directory);
     }
@@ -120,6 +120,6 @@ describe('Switcher test suite', () => {
 
   it('Should init to home directory if no path is provided when constructed', () => {
     var Switcher2 = require('../switcher.js')();
-    expect(Switcher2.awsDir).to.equal(path.resolve(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, '.aws'))
+    expect(Switcher2.awsDir).to.equal(path.resolve(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, 'aws'))
   })
 });
