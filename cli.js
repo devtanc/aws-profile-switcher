@@ -22,7 +22,7 @@ commander.command('list')
 });
 
 commander.command('current')
-.alias('curr')
+.alias('c')
 .description('List the current default profile')
 .action(() => {
   Switcher.getCurrentProfile().then(name => {
