@@ -8,59 +8,59 @@ const expect = chai.expect;
 const PROFILES_LIST = [
   {
     name: 'default',
-    aws_access_key_id: 'PROFILE_2_ID',
-    aws_secret_access_key: 'PROFILE_2_SECRET'
+    aws_access_key_id: 'PROFILE2ID',
+    aws_secret_access_key: 'PROFILE2SECRET'
   },
   {
     name: 'profile1',
-    aws_access_key_id: 'PROFILE_1_ID',
-    aws_secret_access_key: 'PROFILE_1_SECRET'
+    aws_access_key_id: 'PROFILE1ID',
+    aws_secret_access_key: 'PROFILE1SECRET'
   },
   {
     name: 'profile2',
-    aws_access_key_id: 'PROFILE_2_ID',
-    aws_secret_access_key: 'PROFILE_2_SECRET'
+    aws_access_key_id: 'PROFILE2ID',
+    aws_secret_access_key: 'PROFILE2SECRET'
   },
   {
     name: 'profile3',
-    aws_access_key_id: 'PROFILE_3_ID',
-    aws_secret_access_key: 'PROFILE_3_SECRET'
+    aws_access_key_id: 'PROFILE3ID',
+    aws_secret_access_key: 'PROFILE3SECRET'
   },
 ];
 
 const ORIGINAL_LIST = `[default]
-aws_access_key_id = PROFILE_2_ID
-aws_secret_access_key = PROFILE_2_SECRET
+aws_access_key_id = PROFILE2ID
+aws_secret_access_key = PROFILE2SECRET
 
 [profile1]
-aws_access_key_id = PROFILE_1_ID
-aws_secret_access_key = PROFILE_1_SECRET
+aws_access_key_id = PROFILE1ID
+aws_secret_access_key = PROFILE1SECRET
 
 [profile2]
-aws_access_key_id = PROFILE_2_ID
-aws_secret_access_key = PROFILE_2_SECRET
+aws_access_key_id = PROFILE2ID
+aws_secret_access_key = PROFILE2SECRET
 
 [profile3]
-aws_access_key_id = PROFILE_3_ID
-aws_secret_access_key = PROFILE_3_SECRET
+aws_access_key_id = PROFILE3ID
+aws_secret_access_key = PROFILE3SECRET
 
 `
 
 const MODIFIED_LIST = `[default]
-aws_access_key_id = PROFILE_1_ID
-aws_secret_access_key = PROFILE_1_SECRET
+aws_access_key_id = PROFILE1ID
+aws_secret_access_key = PROFILE1SECRET
 
 [profile1]
-aws_access_key_id = PROFILE_1_ID
-aws_secret_access_key = PROFILE_1_SECRET
+aws_access_key_id = PROFILE1ID
+aws_secret_access_key = PROFILE1SECRET
 
 [profile2]
-aws_access_key_id = PROFILE_2_ID
-aws_secret_access_key = PROFILE_2_SECRET
+aws_access_key_id = PROFILE2ID
+aws_secret_access_key = PROFILE2SECRET
 
 [profile3]
-aws_access_key_id = PROFILE_3_ID
-aws_secret_access_key = PROFILE_3_SECRET
+aws_access_key_id = PROFILE3ID
+aws_secret_access_key = PROFILE3SECRET
 
 `
 
@@ -110,6 +110,14 @@ describe('Switcher test suite', () => {
     });
   });
 
+  it('Should throw error when given a non-existent directory', () => {
+    const directory = path.resolve(__dirname, './nonexistent_directory')
+    function createNewSwitcherWithBadDir() {
+      return require('../switcher.js')(directory);
+    }
+    return expect(createNewSwitcherWithBadDir).to.throw(`Given directory does not exist: [${ directory }]`);
+  });
+
   it('Should throw error when trying to read a folder with no credentials', () => {
     const directory = path.resolve(__dirname, './aws_no_credentials')
     function createNewSwitcherWithBadDir() {
@@ -118,8 +126,19 @@ describe('Switcher test suite', () => {
     return expect(createNewSwitcherWithBadDir).to.throw(`No credentials file found in ${ directory }`);
   });
 
-  it('Should init to home directory if no path is provided when constructed', () => {
-    var Switcher2 = require('../switcher.js')();
-    expect(Switcher2.awsDir).to.equal(path.resolve(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, 'aws'))
-  })
+  it('Should throw error when given a credentials file that is blank', () => {
+    const directory = path.resolve(__dirname, './aws_blank_credentials')
+    function createNewSwitcherWithBadDir() {
+      return require('../switcher.js')(directory);
+    }
+    return expect(createNewSwitcherWithBadDir).to.throw(`Empty credentials file found in ${ directory }`);
+  });
+
+  it('Should throw error when given a credentials file that is incorrectly formatted', () => {
+    const directory = path.resolve(__dirname, './aws_bad_credentials')
+    function createNewSwitcherWithBadDir() {
+      return require('../switcher.js')(directory);
+    }
+    return expect(createNewSwitcherWithBadDir).to.throw(`Incorrectly formatted credentials file found in ${ directory }`);
+  });
 });

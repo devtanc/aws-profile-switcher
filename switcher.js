@@ -18,12 +18,26 @@ class Switcher {
       this.awsDir = path.resolve(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, '.aws');
     }
 
-    if(this._checkDirectory(this.awsDir)) {
-      this.profileData = this._getCredentials(this.awsDir);
+    // Directory must exist
+    if(!fs.existsSync(this.awsDir)) {
+      throw new Error(`Given directory does not exist: [${ this.awsDir }]`)
     }
-    else {
+
+    // Directory must contain a credentials file
+    if(!this._checkDirectory(this.awsDir)) {
       throw new Error(`No credentials file found in ${ this.awsDir }`);
     }
+
+    // Credentials file must contain valid profile data
+    const result = this._checkCredentialsFile(this.awsDir);
+    if(result === 'empty') {
+      throw new Error(`Empty credentials file found in ${ this.awsDir }`);
+    }
+    else if (result === 'bad') {
+      throw new Error(`Incorrectly formatted credentials file found in ${ this.awsDir }`);
+    }
+
+    this.profileData = this._getCredentials(this.awsDir);
   }
 
   /**
@@ -100,8 +114,25 @@ class Switcher {
    * @param {String} directory - Path to the aws directory
    * @returns {Boolean} - True if 'credentials' file is found
    */
-  _checkDirectory(directory) {
-      return fs.readdirSync(directory || this.awsDir, 'utf8').indexOf('credentials') > -1;
+  _checkDirectory() {
+    return fs.readdirSync(this.awsDir, 'utf8').indexOf('credentials') > -1;
+  }
+
+  /**
+   * Checks that the credentials file has valid data
+   * 
+   * @returns {String} - Status of the file's contents
+   */
+  _checkCredentialsFile() {
+    const contents = fs.readFileSync(`${ this.awsDir }/credentials`, 'utf8');
+    if (contents === '') {
+      return 'empty';
+    }
+    const regexMatch = contents.match(/\[.*\]\n* *aws_access_key_id *= *[A-Z0-9]+\n* *aws_secret_access_key *= *.*/);
+    if(regexMatch) {
+      return 'good';
+    }
+    return 'bad';
   }
 
   /**
@@ -111,9 +142,9 @@ class Switcher {
    * @returns {Promise.<Array>} - Array of profile objects
    * @reject {Error} - fs.readFile error
    */
-  _getCredentials(directory) {
+  _getCredentials() {
     return new Promise((resolve, reject) => {
-      fs.readFile(`${ directory || this.awsDir }/credentials`, 'utf8', (err, data) => {
+      fs.readFile(`${ this.awsDir }/credentials`, 'utf8', (err, data) => {
         if (err) {
           return reject(err);
         }
