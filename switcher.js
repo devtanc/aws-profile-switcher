@@ -1,8 +1,8 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const chalk = require('chalk');
-const path  = require('path');
-const fs    = require('fs');
 
 class Switcher {
   /**
@@ -11,30 +11,28 @@ class Switcher {
    * @returns {Switcher} - Returns an instance of the Switcher class
    */
   constructor(awsDir) {
-    if(awsDir) {
+    if (awsDir) {
       this.awsDir = path.resolve(__dirname, awsDir);
-    }
-    else {
+    } else {
       this.awsDir = path.resolve(process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE, '.aws');
     }
 
     // Directory must exist
-    if(!fs.existsSync(this.awsDir)) {
-      throw new Error(`Given directory does not exist: [${ this.awsDir }]`)
+    if (!fs.existsSync(this.awsDir)) {
+      throw new Error(`Given directory does not exist: [${this.awsDir}]`);
     }
 
     // Directory must contain a credentials file
-    if(!this._checkDirectory(this.awsDir)) {
-      throw new Error(`No credentials file found in ${ this.awsDir }`);
+    if (!this._checkDirectory(this.awsDir)) {
+      throw new Error(`No credentials file found in ${this.awsDir}`);
     }
 
     // Credentials file must contain valid profile data
     const result = this._checkCredentialsFile(this.awsDir);
-    if(result === 'empty') {
-      throw new Error(`Empty credentials file found in ${ this.awsDir }`);
-    }
-    else if (result === 'bad') {
-      throw new Error(`Incorrectly formatted credentials file found in ${ this.awsDir }`);
+    if (result === 'empty') {
+      throw new Error(`Empty credentials file found in ${this.awsDir}`);
+    } else if (result === 'bad') {
+      throw new Error(`Incorrectly formatted credentials file found in ${this.awsDir}`);
     }
 
     this.profileData = this._getCredentials(this.awsDir);
@@ -52,7 +50,7 @@ class Switcher {
       return profiles.filter(profile => {
         return !profile.name.match(new RegExp(/default/, 'i'));
       }).forEach((profile, index) => {
-        console.log(chalk.green(`${ index + 1 }: ${ profile.name }`));
+        console.log(chalk.green(`${index + 1}: ${profile.name}`));
       });
     })
     .catch(this.errHandler);
@@ -61,19 +59,19 @@ class Switcher {
   /**
    * Overwrites the [default] profile with the profile that matches @name
    * @param {String} name - The [name] of the profile to set as the default
-   * @returns {Promise}   - Returns the promise from the writeBackConfigData function
+   * @returns {Promise}   - Returns the promise from the _writeBackCredentialsData function
    */
   switchProfileByName(name) {
     return this.profileData.then(data => {
-      let defaultProfile = data.find(profile => profile.name === 'default');
+      const defaultProfileIndex = data.findIndex(profile => profile.name === 'default');
       const newProfile = Object.assign({}, data.find(p => p.name === name));
 
       delete newProfile.name;
-      defaultProfile = Object.assign(defaultProfile, newProfile);
+      data[defaultProfileIndex] = Object.assign(data[defaultProfileIndex], newProfile);
       return this._writeBackCredentialsData(data);
     })
     .catch(this.errHandler);
-  };
+  }
 
   /**
    * Finds ~the first~ profile that contains the same aws_access_key_id as the [default] profile
@@ -81,7 +79,7 @@ class Switcher {
    */
   getCurrentProfile() {
     return this.profileData.then(data => {
-      let defaultProfile = data.find(profile => profile.name === 'default');
+      const defaultProfile = data.find(profile => profile.name === 'default');
       const newProfile = data.find(p =>
         p.aws_access_key_id === defaultProfile.aws_access_key_id &&
         p.name !== 'default'
@@ -90,7 +88,7 @@ class Switcher {
       return newProfile.name;
     })
     .catch(this.errHandler);
-  };
+  }
 
   /**
    * Returns the name of the profile at the given index
@@ -99,18 +97,18 @@ class Switcher {
    */
   getProfileNameByIndex(index) {
     return this.profileData.then(data => data[index].name);
-  };
+  }
 
   /**
    * @returns {Promise.<Array>} - Array of profile objects
    */
   _getProfileList() {
     return this.profileData.catch(this.errHandler);
-  };
+  }
 
   /**
    * Checks that the credentials file exists
-   * 
+   *
    * @param {String} directory - Path to the aws directory
    * @returns {Boolean} - True if 'credentials' file is found
    */
@@ -120,16 +118,16 @@ class Switcher {
 
   /**
    * Checks that the credentials file has valid data
-   * 
+   *
    * @returns {String} - Status of the file's contents
    */
   _checkCredentialsFile() {
-    const contents = fs.readFileSync(`${ this.awsDir }/credentials`, 'utf8');
+    const contents = fs.readFileSync(`${this.awsDir}/credentials`, 'utf8');
     if (contents === '') {
       return 'empty';
     }
     const regexMatch = contents.match(/\[.*\]\n* *aws_access_key_id *= *[A-Z0-9]+\n* *aws_secret_access_key *= *.*/);
-    if(regexMatch) {
+    if (regexMatch) {
       return 'good';
     }
     return 'bad';
@@ -137,14 +135,14 @@ class Switcher {
 
   /**
    * Parses the credentials file into an Array of profile objects
-   * 
+   *
    * @param {String} directory - Path to the aws directory
    * @returns {Promise.<Array>} - Array of profile objects
    * @reject {Error} - fs.readFile error
    */
   _getCredentials() {
     return new Promise((resolve, reject) => {
-      fs.readFile(`${ this.awsDir }/credentials`, 'utf8', (err, data) => {
+      fs.readFile(`${this.awsDir}/credentials`, 'utf8', (err, data) => {
         if (err) {
           return reject(err);
         }
@@ -162,10 +160,10 @@ class Switcher {
           // This regex will match the '[name]' format and extract 'name'
           const matches = curr.match(/\[(.*)\]/);
 
-          //If this is a profile name, push a new profile object to the array with the name
+          // If this is a profile name, push a new profile object to the array with the name
           if (matches) {
             prev.push({
-              // matches[0] === '[name]'
+              // Matches[0] === '[name]'
               // matches[1] === 'name' <- This is the one we want
               name: matches[1],
             });
@@ -174,7 +172,7 @@ class Switcher {
 
           /*
           * At this point this line is neither blank nor a profile name
-          * Which means it's either an AWS profile ID or a secret which are formatted:
+          * Which means it's either an AWS profile ID or a secret which are formatted like:
           *  aws_access_key_id=ACCESS_KEY_ID
           *  aws_secret_access_key=SECRET_ACESS_KEY
           * With possible spaces in between the '=' and they key/value
@@ -191,11 +189,11 @@ class Switcher {
             Object.keys(p).length < 3
           );
 
-          // sections[0] === 'aws_access_key_id'  || sections[0] === 'aws_secret_access_key'
+          // Sections[0] === 'aws_access_key_id'  || sections[0] === 'aws_secret_access_key'
           // sections[1] === ACCESS_KEY_ID        || sections[1] === SECRET_ACESS_KEY
           profile[sections[0]] = sections[1];
           return prev;
-        }, []); // Pass in an empty array to start
+        }, []); // Pass in an empty array to start the reduce
 
         return resolve(data);
       });
@@ -204,9 +202,9 @@ class Switcher {
 
   /**
    * @param {Object[]} profile - Array of profile objects
-   * @param {String} profile.name                     - The profile's name (no square brackets)
-   * @param {String} profile.aws_access_key_id        - The profile's access key ID (from AWS)
-   * @param {String} profile.aws_secret_access_key    - The profile's secret access key (from AWS)
+   * @param {String} profile.name                   - The profile's name (no square brackets)
+   * @param {String} profile.aws_access_key_id      - The profile's access key ID (from AWS)
+   * @param {String} profile.aws_secret_access_key  - The profile's secret access key (from AWS)
    * @returns {Promise.<undefined>} - Returns an empty resolved Promise
    * @reject {Error} - Error writing the credentials file
    */
@@ -214,13 +212,13 @@ class Switcher {
     let writeData = '';
 
     data.forEach(profile => {
-      writeData = writeData.concat(`[${ profile.name }]\n`);
-      writeData = writeData.concat(`aws_access_key_id = ${ profile.aws_access_key_id }\n`);
-      writeData = writeData.concat(`aws_secret_access_key = ${ profile.aws_secret_access_key }\n\n`);
+      writeData = writeData.concat(`[${profile.name}]\n`);
+      writeData = writeData.concat(`aws_access_key_id = ${profile.aws_access_key_id}\n`);
+      writeData = writeData.concat(`aws_secret_access_key = ${profile.aws_secret_access_key}\n\n`);
     });
 
     return new Promise((resolve, reject) => {
-      fs.writeFile(`${ this.awsDir }/credentials`, writeData, err => {
+      fs.writeFile(`${this.awsDir}/credentials`, writeData, err => {
         if (err) {
           return reject(err);
         }
@@ -232,4 +230,4 @@ class Switcher {
 
 module.exports = path => {
   return new Switcher(path);
-}
+};
