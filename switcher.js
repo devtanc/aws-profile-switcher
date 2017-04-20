@@ -197,10 +197,13 @@ class Switcher {
 
         return resolve(data);
       });
-    });
+    })
+    .then(data => this._handleMissingDefaultProfile(data));
   }
 
   /**
+   * Writes the credentials data back to the credentials file
+   *
    * @param {Object[]} profile - Array of profile objects
    * @param {String} profile.name                   - The profile's name (no square brackets)
    * @param {String} profile.aws_access_key_id      - The profile's access key ID (from AWS)
@@ -224,6 +227,32 @@ class Switcher {
         }
         return resolve();
       });
+    });
+  }
+
+  /**
+   * Checks the profile array to make sure that there is a default profile object
+   * (in case no default was specified in the credentials file)
+   * If not, then one is created and defaulted to the first profile's data
+   *
+   * @param {Object[]} profile - Array of profile objects
+   * @param {String} profile.name                   - The profile's name (no square brackets)
+   * @param {String} profile.aws_access_key_id      - The profile's access key ID (from AWS)
+   * @param {String} profile.aws_secret_access_key  - The profile's secret access key (from AWS)
+   * @returns {Promise.<Array>} - Array of profile objects
+   */
+  _handleMissingDefaultProfile(profileData) {
+    return new Promise(resolve => {
+      if (profileData.find(profile => profile.name === 'default')) {
+        return resolve(profileData);
+      }
+
+      const defaultProfile = Object.assign({}, profileData[0]);
+      defaultProfile.name = 'default';
+      profileData.unshift(defaultProfile);
+
+      return this._writeBackCredentialsData(profileData)
+      .then(() => resolve(profileData));
     });
   }
 }
