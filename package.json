@@ -1,6 +1,6 @@
 {
   "name": "aws-profile-switcher",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A basic cli for switching your default aws profile in ~/.aws/credentials",
   "main": "switcher.js",
   "scripts": {
@@ -16,7 +16,15 @@
     "rules": {
       "camelcase": [ "off" ],
       "comma-dangle": [ "error", "always-multiline" ],
-      "max-nested-callbacks": [ "off" ]
+      "max-nested-callbacks": [ "off" ],
+      "object-curly-spacing": [
+        "error",
+        "always",
+        {
+          "arraysInObjects": false,
+          "objectsInObjects": false
+        }
+      ]
     }
   },
   "keywords": [

@@ -157,16 +157,15 @@ class Switcher {
             return prev;
           }
 
-          // This regex will match the '[name]' format and extract 'name'
+          // This regex will match [.*] and extract interior characters as the second array item
+          // matches[0] = [AAAA]
+          // matches[1] = AAAA
           const matches = curr.match(/\[(.*)\]/);
 
           // If this is a profile name, push a new profile object to the array with the name
           if (matches) {
-            prev.push({
-              // Matches[0] === '[name]'
-              // matches[1] === 'name' <- This is the one we want
-              name: matches[1],
-            });
+            const [, name] = matches;
+            prev.push({ name });
             return prev;
           }
 
@@ -175,23 +174,24 @@ class Switcher {
           * Which means it's either an AWS profile ID or a secret which are formatted like:
           *  aws_access_key_id=ACCESS_KEY_ID
           *  aws_secret_access_key=SECRET_ACESS_KEY
-          * With possible spaces in between the '=' and they key/value
+          * With possible spaces in between the '=' and the key/value
           */
 
           // Split on '=' and then remove any spaces
-          const sections = curr.split('=').map(section => section.replace(' ', ''));
+          // [0] === 'aws_access_key_id'  || [0] === 'aws_secret_access_key'
+          // [1] === ACCESS_KEY_ID        || [1] === SECRET_ACESS_KEY
+          const [key, value] = curr.split('=').map(section => section.replace(' ', ''));
 
           // Find an existing array object with a defined name and less then 3 object properties
-          // Each profile object should end up with 3 properties: [name, aws_access_key_id, aws_secret_access_key]
+          // Each profile object should end up with 3 properties:
+          // [name, aws_access_key_id, aws_secret_access_key]
           // Only the most recent profile object will have a defined name and less then 3 properties
           const profile = prev.find(p =>
             p.name !== undefined &&
             Object.keys(p).length < 3
           );
 
-          // Sections[0] === 'aws_access_key_id'  || sections[0] === 'aws_secret_access_key'
-          // sections[1] === ACCESS_KEY_ID        || sections[1] === SECRET_ACESS_KEY
-          profile[sections[0]] = sections[1];
+          profile[key] = value;
           return prev;
         }, []); // Pass in an empty array to start the reduce
 
