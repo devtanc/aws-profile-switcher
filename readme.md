@@ -6,6 +6,7 @@
 [![Dependency Status](https://gemnasium.com/badges/github.com/devtanc/aws-profile-switcher.svg)](https://gemnasium.com/github.com/devtanc/aws-profile-switcher)
 [![GitHub issues](https://img.shields.io/github/issues/devtanc/aws-profile-switcher.svg)](https://github.com/devtanc/aws-profile-switcher/issues)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
+[![Known Vulnerabilities](https://snyk.io/test/github/devtanc/aws-profile-switcher/badge.svg)](https://snyk.io/test/github/devtanc/aws-profile-switcher)
 
 A simple command line utility that allows you to switch your default aws profile found at `~/.aws/credentials`.
 
@@ -136,6 +137,3 @@ Yes, I'm aware of the [built-in](http://docs.aws.amazon.com/cli/latest/userguide
 - *BUT* `switcher sw` lists out the profiles so that you don't have to remember the names
 - *AND* more people know how to install an npm package than how to update their `~/.bash_profile` file correctly, most likely
 - Changing a profile applies to all shell instances for as long as it is set
-- I got to try out writing a cli package with full unit tests, a linter, and build integration with TravisCI
-
-In the end, if you like it: install it and use it. I certainly like it better than the alternatives.
