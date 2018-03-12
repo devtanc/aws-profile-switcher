@@ -1,0 +1,16 @@
+[default]
+output = text
+region = us-west-2
+
+[profile profile1]
+output = json
+region = us-east-1
+
+[profile profile2]
+output = text
+region = us-west-2
+
+[profile profile3]
+output = table
+region = ap-northeast-1
+

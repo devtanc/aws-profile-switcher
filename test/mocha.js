@@ -89,6 +89,40 @@ aws_access_key_id = PROFILE3ID
 aws_secret_access_key = PROFILE3SECRET
 
 `;
+const CONFIG_ORIGINAL_LIST = `[default]
+output = text
+region = us-west-2
+
+[profile profile1]
+output = json
+region = us-east-1
+
+[profile profile2]
+output = text
+region = us-west-2
+
+[profile profile3]
+output = table
+region = ap-northeast-1
+
+`;
+const CONFIG_MODIFIED_LIST = `[default]
+output = json
+region = us-east-1
+
+[profile profile1]
+output = json
+region = us-east-1
+
+[profile profile2]
+output = text
+region = us-west-2
+
+[profile profile3]
+output = table
+region = ap-northeast-1
+
+`;
 const NO_DEFAULT_LIST = [
   {
     name: 'default',
@@ -231,6 +265,55 @@ describe('Switcher test suite', () => {
               return reject(err);
             }
             return resolve(expect(data).to.equal(NO_DEFAULT_MODIFIED_DATA));
+          });
+        });
+      });
+    });
+  });
+
+  describe('Tests with a config file', () => {
+    it('Should read and modify the config when present', () => {
+      const directory = path.resolve(__dirname, './aws_with_config');
+      const SwitcherWithConfig = require('../switcher.js')(directory);
+      return SwitcherWithConfig.switchProfileByName('profile1')
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          fs.readFile(path.resolve(__dirname, './aws_with_config/credentials'), 'utf8', (err, data) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(expect(data).to.equal(MODIFIED_LIST));
+          });
+        })
+        .then(() => {
+          return new Promise((resolve, reject) => {
+            fs.readFile(path.resolve(__dirname, './aws_with_config/config'), 'utf8', (err, data) => {
+              if (err) {
+                return reject(err);
+              }
+              return resolve(expect(data).to.equal(CONFIG_MODIFIED_LIST));
+            });
+          });
+        });
+      })
+      .then(() => SwitcherWithConfig.switchProfileByName('profile2'))
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          fs.readFile(path.resolve(__dirname, './aws_with_config/credentials'), 'utf8', (err, data) => {
+            if (err) {
+              return reject(err);
+            }
+            return resolve(expect(data).to.equal(ORIGINAL_LIST));
+          });
+        })
+        .then(() => {
+          return new Promise((resolve, reject) => {
+            fs.readFile(path.resolve(__dirname, './aws_with_config/config'), 'utf8', (err, data) => {
+              if (err) {
+                return reject(err);
+              }
+              return resolve(expect(data).to.equal(CONFIG_ORIGINAL_LIST));
+            });
           });
         });
       });

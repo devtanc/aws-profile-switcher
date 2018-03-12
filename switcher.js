@@ -326,7 +326,11 @@ class Switcher {
       writeData = writeData.concat(`aws_access_key_id = ${profile.aws_access_key_id}\n`);
       writeData = writeData.concat(`aws_secret_access_key = ${profile.aws_secret_access_key}\n\n`);
       if (this.processConfig) {
-        configData = configData.concat(`[profile ${profile.name}]\n`);
+        if (profile.name === 'default') {
+          configData = configData.concat(`[${profile.name}]\n`);
+        } else {
+          configData = configData.concat(`[profile ${profile.name}]\n`);
+        }
         if (profile.output) {
           configData = configData.concat(`output = ${profile.output}\n`);
         }
