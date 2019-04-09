@@ -191,7 +191,11 @@ class Switcher {
             Object.keys(p).length < 3
           );
 
-          profile[key] = value;
+          // Only allow valid keys i.e. ignore aws_session_token
+          if (key == "aws_access_key_id" || key == "aws_secret_access_key" || key == "ACCESS_KEY_ID" || key == "SECRET_ACCESS_KEY") {
+            profile[key] = value;
+          }
+          
           return prev;
         }, []); // Pass in an empty array to start the reduce
 
