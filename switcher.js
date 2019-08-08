@@ -123,14 +123,13 @@ class Switcher {
    */
   _checkCredentialsFile() {
     const contents = fs.readFileSync(`${this.awsDir}/credentials`, 'utf8');
+
     if (contents === '') {
       return 'empty';
     }
-    const regexMatch = contents.match(/\[.*\]\n* *aws_access_key_id *= *[A-Z0-9]+\n* *aws_secret_access_key *= *.*/);
-    if (regexMatch) {
-      return 'good';
-    }
-    return 'bad';
+
+    const regexMatch = contents.match(/\[.*\](\n|\r)* *aws_access_key_id *= *[A-Z0-9]+(\n|\r)* *aws_secret_access_key *= *.*/);
+    return regexMatch ? 'good' : 'bad';
   }
 
   /**
@@ -148,6 +147,7 @@ class Switcher {
         }
 
         // Separate into lines
+        data = data.replace(/\r/g, '');
         data = data.split('\n');
 
         // Reduce the lines into an array of profile objects
